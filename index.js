@@ -1,5 +1,63 @@
+// Adding the necessary libraries
+
 const inquirer = require('inquirer')
 const fs = require('fs')
+
+// Get the blueprint in there
+
+const generateREADME = ({ title, description, install, usage, contribution, test, tech, license, question,}) =>
+`${title}
+## Table of Contents 
+
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [Tests](#tests)
+- [Questions](#questions)
+- [technologies](#technologies)
+- [License](#license)
+
+---
+
+## Project Description 
+
+${description}
+
+
+## Installation
+
+${install}
+
+### Usage
+
+${usage}
+
+### Contributing
+
+${contribution}
+
+#### Tests
+
+${test}
+
+
+**Questions**
+
+
+${question}
+
+
+**Technologies**
+
+${tech}
+
+### License
+
+${license}
+`
+
+// Question time! I happen to be fond of inquirer.
 
 inquirer
     .prompt([
@@ -42,18 +100,18 @@ inquirer
         {
             type: 'input',
             message: 'Please input your github username and a link to your repo.',
-            name: 'username'
+            name: 'question'
         },
         {
             type: 'input',
-            message: 'Please input your email.',
-            name: 'email'
+            message: 'What technologies did you use?',
+            name: 'tech'
         },
-
-    ]).then((data) => {
-        const filename = `${data.title.toLowerCase().split(' ').join('')}.md`;
-    
-        fs.writeFile(filename, JSON.stringify(data, null, '\t'), (err) =>
-          err ? console.log(err) : console.log('Success!')
-        );
+        // .then so it doesnt run until after this stuff has been answered, stick those answers into the blueprint and voila! A quality README.
+    ]).then((answers) => {
+        const generateFile = generateREADME(answers)
+        // Console log those errors if they happen, otherwise tell me I'm good!
+        fs.writeFile('README.md', generateFile, (err) =>
+        err ? console.log(err) : console.log('Successfully created README.md')
+      );
       });
